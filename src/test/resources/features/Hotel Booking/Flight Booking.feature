@@ -20,6 +20,8 @@ Feature: Flight Booking
       | Reason for travel | Title   | First Name  | Last Name  | Age   |
       | <reasonfortravel> | <title> | <firstname> | <lastname> | <age> |
     Then the booking details are displayed correctly on the 'Checkout' page
+      | Booker Email Address | Passenger First Name | Passenger Last Name | Passenger Age | Origin   | Destination   | Departing Date  |
+      | <username>           | <firstname>          | <lastname>          | <age>         | <origin> | <destination> | <departingdate> |
 
     Examples:
       | origin             | destination    | departingdate | username               | password | reasonfortravel | title | firstname | lastname | age |

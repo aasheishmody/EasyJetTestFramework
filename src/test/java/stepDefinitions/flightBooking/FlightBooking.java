@@ -83,4 +83,10 @@ public class FlightBooking extends Page {
         }
         return tableDetails;
     }
+
+    @Then("^the booking details are displayed correctly on the 'Checkout' page$")
+    public void theBookingDetailsAreDisplayedCorrectlyOnTheCheckoutPage(DataTable table) throws Throwable {
+        Map<String, String> bookingDetails = getTableDetails(table);
+        Assert.assertTrue(checkOutPage.bookingDetailsAreDisplayedCorrectly(bookingDetails));
+    }
 }

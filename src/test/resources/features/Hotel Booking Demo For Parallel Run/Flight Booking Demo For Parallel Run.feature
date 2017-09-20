@@ -11,13 +11,15 @@ Feature: Flight Booking Demo for Parallel Run
       | Origin   | Destination   | Departing Date  |
       | <origin> | <destination> | <departingdate> |
     And I skip all the optional extras
-    And I login with the following valid details on the 'Checkout' page
+    When I login with the following valid details on the 'Checkout' page
       | Username   | Password   |
       | <username> | <password> |
     And I enter the Passenger details on the 'Checkout' page
       | Reason for travel | Title   | First Name  | Last Name  | Age   |
       | <reasonfortravel> | <title> | <firstname> | <lastname> | <age> |
     Then the booking details are displayed correctly on the 'Checkout' page
+      | Booker Email Address | Passenger First Name | Passenger Last Name | Passenger Age | Origin   | Destination   | Departing Date  |
+      | <username>           | <firstname>          | <lastname>          | <age>         | <origin> | <destination> | <departingdate> |
 
     Examples:
       | origin             | destination    | departingdate | username               | password | reasonfortravel | title | firstname | lastname | age |

@@ -1,8 +1,6 @@
 package pageObjects;
 
-import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -11,9 +9,9 @@ import util.Retrier;
 import util.WebConnector;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Map;
+import java.util.Date;
 
 public abstract class Page extends WebConnector {
 
@@ -65,26 +63,14 @@ public abstract class Page extends WebConnector {
         return element.getText();
     }
 
-    String getDate(Map<String, String> bookingDetails, String date) {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar cal = Calendar.getInstance();
-        switch (bookingDetails.get(date)) {
-            case "Today":
-                cal.add(Calendar.DATE, 0);
-                date = dateFormat.format(cal.getTime());
-                break;
-            case "Tomorrow":
-                cal.add(Calendar.DATE, 1);
-                date = dateFormat.format(cal.getTime());
-                break;
-            case "Yesterday":
-                cal.add(Calendar.DATE, -1);
-                date = dateFormat.format(cal.getTime());
-                break;
-            default:
-                date = bookingDetails.get(date);
-        }
-        return date;
+    String getFormattedDate(Date date) {
+        DateFormat dateFormat = new SimpleDateFormat("EEE dd MMM");
+        return dateFormat.format(date);
+    }
+
+    Date getParsedDate(String unparsedDate, String pattern) throws ParseException {
+        DateFormat format = new SimpleDateFormat(pattern);
+        return format.parse(unparsedDate);
     }
 
     boolean isDisplayed(WebElement element, int timeout) {
@@ -104,25 +90,18 @@ public abstract class Page extends WebConnector {
         getLogger().info("Clicked element - " + element + " using javascript click");
     }
 
-    private void waitForPageTitle(String title, int timeout){
+    private void waitForPageTitle(String title, int timeout) {
         WebDriverWait wait = new WebDriverWait(getDriver(), timeout);
         wait.until(ExpectedConditions.titleContains(title));
     }
 
-    void waitForPageToLoad(String pageTitle, int timeout){
+    void waitForPageToLoad(String pageTitle, int timeout) {
         waitForPageTitle(pageTitle, timeout);
     }
 
-    void selectOptionFromDropDown(WebElement element, String option, int timeout){
+    void selectOptionFromDropDown(WebElement element, String option, int timeout) {
         waitForElementToBeDisplayed(element, timeout);
-        Select dropdown= new Select(element);
+        Select dropdown = new Select(element);
         dropdown.selectByVisibleText(option);
-    }
-
-    protected void sendKeyBoardKeys(WebElement element, Keys key, int timeout) {
-        waitForElementToBeDisplayed(element, timeout);
-        getLogger().info("Sending text - " + key + " to element - " + element);
-        element.sendKeys(key);
-        getLogger().info("Sent text - " + key + " to element - " + element);
     }
 }

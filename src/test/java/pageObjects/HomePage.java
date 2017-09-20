@@ -1,6 +1,5 @@
 package pageObjects;
 
-import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -19,7 +18,6 @@ public class HomePage extends Page {
     private WebElement FlightOriginTextBox;
     @FindBy(name = "destination")
     private WebElement FlightDestinationTextBox;
-    //@FindBy(xpath = "//a[@class='selectable']/parent::div[1][@data-date='2018-03-12']")
     @FindBy(xpath = "//a[@class='selectable']/parent::div[1]")
     private List<WebElement> AvailableCalendarDates;
     @FindBy(xpath = "//button[contains(text(),'Show flights')]")
