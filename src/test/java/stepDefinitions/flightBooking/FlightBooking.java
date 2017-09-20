@@ -10,6 +10,7 @@ import org.junit.Assert;
 import org.openqa.selenium.support.PageFactory;
 import pageObjects.*;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -37,42 +38,69 @@ public class FlightBooking extends Page {
         checkOutPage = PageFactory.initElements(getDriver(), CheckOutPage.class);
     }
 
-
     @Given("^I am on the 'Home' page$")
     public void iAmOnTheHomePage() throws Throwable {
-        navigating("to the HomePage oage", homePage::open);
+        navigating("to the HomePage page", homePage::open);
     }
 
     @And("^I select a one way flight with the following details$")
     public void iSelectAOneWayFlightWithTheFollowingDetails(DataTable table) throws Throwable {
-        homePage.selectOneWayOptionForBookingFlight();
-        Map<String, String> flightDetails = getTableDetails(table);
-        homePage.enterflightDetails(flightDetails);
-        homePage.clickShowFlightsButton();
-        chooseYourFlightsPage.selectFirstAvailableFlightForTheChosenDate();
-        chooseYourFlightsPage.clickContinueButton();
+        selecting("one way flight", () -> {
+            homePage.selectOneWayOptionForBookingFlight();
+            Map<String, String> flightDetails = getTableDetails(table);
+            homePage.enterflightDetails(flightDetails);
+            homePage.clickShowFlightsButton();
+            chooseYourFlightsPage.selectFirstAvailableFlightForTheChosenDate();
+            chooseYourFlightsPage.clickContinueButton();
+        });
     }
 
     @And("^I skip all the optional extras$")
     public void iSkipAllTheOptionalExtras() throws Throwable {
-        seatSelectionPage.skipSeatSelection();
-        holdLuggageAndSportsEquipmentPage.skipAdditionalLuggageOption();
-        holdLuggageAndSportsEquipmentPage.acceptAndContinueWithoutAddingExtraLuggage();
-        extrasForYourTripPage.skipExtrasForTheTrip();
-        hotelsPage.skipHotelBooking();
-        carHirePage.skipCarHire();
+        skipping("all the optional extras", () -> {
+            seatSelectionPage.skipSeatSelection();
+            holdLuggageAndSportsEquipmentPage.skipAdditionalLuggageOption();
+            holdLuggageAndSportsEquipmentPage.acceptAndContinueWithoutAddingExtraLuggage();
+            extrasForYourTripPage.skipExtrasForTheTrip();
+            hotelsPage.skipHotelBooking();
+            carHirePage.skipCarHire();
+        });
     }
 
     @And("^I login with the following valid details on the 'Checkout' page$")
     public void iLoginWithTheFollowingValidDetailsOnTheCheckoutPage(DataTable table) throws Throwable {
-        Map<String, String> signinDetails = getTableDetails(table);
-        checkOutPage.signinWithExistingDetails(signinDetails);
+        logging("with valid details", () -> {
+            Map<String, String> signinDetails = getTableDetails(table);
+            try {
+                checkOutPage.signinWithExistingDetails(signinDetails);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     @And("^I enter the Passenger details on the 'Checkout' page$")
     public void iEnterThePassengerDetailsOnTheCheckoutPage(DataTable table) throws Throwable {
-        Map<String, String> passengerDetails = getTableDetails(table);
-        checkOutPage.enterPassengerDetails(passengerDetails);
+        entering("the Passenger details on the 'Checkout' page", () -> {
+            Map<String, String> passengerDetails = getTableDetails(table);
+            try {
+                checkOutPage.enterPassengerDetails(passengerDetails);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    @Then("^the booking details are displayed correctly on the 'Checkout' page$")
+    public void theBookingDetailsAreDisplayedCorrectlyOnTheCheckoutPage(DataTable table) throws Throwable {
+        asserting("that the booking details are displayed correctly on the 'Checkout' page", () -> {
+            Map<String, String> bookingDetails = getTableDetails(table);
+            try {
+                Assert.assertTrue(checkOutPage.bookingDetailsAreDisplayedCorrectly(bookingDetails));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private Map<String, String> getTableDetails(DataTable table) {
@@ -82,11 +110,5 @@ public class FlightBooking extends Page {
             tableDetails = tableDetail;
         }
         return tableDetails;
-    }
-
-    @Then("^the booking details are displayed correctly on the 'Checkout' page$")
-    public void theBookingDetailsAreDisplayedCorrectlyOnTheCheckoutPage(DataTable table) throws Throwable {
-        Map<String, String> bookingDetails = getTableDetails(table);
-        Assert.assertTrue(checkOutPage.bookingDetailsAreDisplayedCorrectly(bookingDetails));
     }
 }

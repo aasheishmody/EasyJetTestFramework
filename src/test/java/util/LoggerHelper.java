@@ -23,15 +23,27 @@ public class LoggerHelper {
             logger.info("Asserted " + name);
         }
 
-    public static void clicking(String name, Runnable function) throws Exception {
-            logger.info("Clicking " + name);
-            function.run();
-            logger.info("Clicked " + name);
-    }
-
     public static void entering(String name, Runnable function) throws Exception {
         logger.info("Entering " + name);
         function.run();
         logger.info("Entered " + name);
+    }
+
+    public static void selecting(String name, Runnable function) throws Exception {
+        logger.info("Selecting " + name);
+        function.run();
+        logger.info("Selected " + name);
+    }
+
+    public static void skipping(String name, Runnable function) throws Exception {
+        logger.info("Skipping " + name);
+        function.run();
+        logger.info("Skipped " + name);
+    }
+
+    public static void logging(String name, Runnable function) throws Exception {
+        logger.info("Logging in " + name);
+        function.run();
+        logger.info("Logged in " + name);
     }
 }
